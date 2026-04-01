@@ -1,14 +1,21 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { isAuthenticated } from '../utils/auth';
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const isAuth = isAuthenticated();
-  
-  // Later we can add role checking
-  // const userRole = getRole();
-  // if (allowedRoles && !allowedRoles.includes(userRole)) { ... }
 
-  return isAuth ? <Outlet /> : <Navigate to="/login" replace />;
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  // ❌ Not logged in
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
+
+  // ❌ Role not allowed
+  if (allowedRoles && !allowedRoles.includes(role)) {
+    return <Navigate to="/" />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
