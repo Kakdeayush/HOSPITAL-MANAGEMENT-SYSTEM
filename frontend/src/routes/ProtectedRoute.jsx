@@ -7,14 +7,15 @@ const ProtectedRoute = ({ allowedRoles }) => {
 
   // ❌ Not logged in
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
   // ❌ Role not allowed
   if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" replace />;
   }
 
+  // ✅ Allowed
   return <Outlet />;
 };
 

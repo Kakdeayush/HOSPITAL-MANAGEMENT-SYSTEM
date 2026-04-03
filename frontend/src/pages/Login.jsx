@@ -11,7 +11,6 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
@@ -19,11 +18,25 @@ const Login = () => {
 
     try {
       const response = await api.post('/auth/login', { email, password });
-      const { token, role } = response.data;
-      setToken(token);
-      setRole(role);
+
+      const { token, role } = response.data; // ✅ already here
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+
       toast.success('Login successful!');
-      navigate('/');
+
+      // 🔥 CORRECT REDIRECT (NO DUPLICATE ROLE)
+      if (role === "ADMIN") {
+        navigate("/dashboard");
+      } else if (role === "DOCTOR") {
+        navigate("/appointments");
+      } else if (role === "PATIENT") {
+        navigate("/book-appointment");
+      } else {
+        navigate("/login");
+      }
+
     } catch (err) {
       console.error('API login failed', err);
       const errorMsg = err.response?.data?.message || 'Failed to login. Please check credentials.';
@@ -33,7 +46,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Left Side - Illustration */}

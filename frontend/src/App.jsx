@@ -19,6 +19,9 @@ function App() {
 
       <Routes>
 
+        {/* 🔥 DEFAULT → LOGIN PAGE */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
         {/* 🔓 Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -29,8 +32,8 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
 
-            {/* ✅ Dashboard (ALL roles) */}
-            <Route path="/" element={<Dashboard />} />
+            {/* ✅ Dashboard AFTER LOGIN */}
+            <Route path="/dashboard" element={<Dashboard />} />
 
             {/* 🔴 ADMIN ONLY */}
             <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
@@ -52,7 +55,7 @@ function App() {
         </Route>
 
         {/* ❌ Unknown route */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
 
       </Routes>
     </BrowserRouter>
